@@ -1,15 +1,14 @@
 package dev.marawanxmamdouh.asteroidradar.api
 
-import dev.marawanxmamdouh.asteroidradar.model.Asteroid
 import dev.marawanxmamdouh.asteroidradar.Constants
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun parseAsteroidsJsonResult(jsonResult: JSONObject): List<Asteroid> {
+fun parseAsteroidsJsonResult(jsonResult: JSONObject): NetworkAsteroidContainer {
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")
 
-    val asteroidList = ArrayList<Asteroid>()
+    val asteroidList = ArrayList<NetworkAsteroid>()
 
     val nextSevenDaysFormattedDates = getNextSevenDaysFormattedDates()
     for (formattedDate in nextSevenDaysFormattedDates) {
@@ -33,7 +32,7 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): List<Asteroid> {
                 val isPotentiallyHazardous = asteroidJson
                     .getBoolean("is_potentially_hazardous_asteroid")
 
-                val asteroid = Asteroid(
+                val asteroid = NetworkAsteroid(
                     id, codename, formattedDate, absoluteMagnitude,
                     estimatedDiameter, relativeVelocity, distanceFromEarth, isPotentiallyHazardous
                 )
@@ -42,7 +41,7 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): List<Asteroid> {
         }
     }
 
-    return asteroidList
+    return NetworkAsteroidContainer(asteroidList)
 }
 
 private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
