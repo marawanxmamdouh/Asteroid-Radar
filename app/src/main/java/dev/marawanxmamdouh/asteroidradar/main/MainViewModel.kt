@@ -38,4 +38,19 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    /**
+     * This part is to handle navigation from main fragment to detail fragment and back
+     */
+    private val _navigateToDetailFragment = MutableLiveData<Asteroid?>()
+    val navigateToDetailFragment: LiveData<Asteroid?>
+        get() = _navigateToDetailFragment
+
+    fun navigateToDetailFragment(asteroid: Asteroid) {
+        _navigateToDetailFragment.value = asteroid
+    }
+
+    fun onNavigateToDetailFragmentComplete() {
+        _navigateToDetailFragment.value = null
+    }
 }
