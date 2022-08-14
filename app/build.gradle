@@ -70,7 +70,7 @@ dependencies {
     // Retrofit Coroutines Support
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_retrofit_coroutines_adapter"
     // Retrofit converter scalars
-    //implementation "com.squareup.retrofit2:converter-scalars:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-scalars:$version_retrofit"
 
     // Moshi for parsing the JSON format
     implementation "com.squareup.moshi:moshi:$version_moshi"
