@@ -1,5 +1,6 @@
 package dev.marawanxmamdouh.asteroidradar.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import dev.marawanxmamdouh.asteroidradar.Constants
@@ -21,8 +22,13 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
         }
 
     suspend fun refreshAsteroids() {
+        Log.i("AsteroidRepository", "refreshAsteroids (line 29): $currentDate --- $endDate")
         withContext(Dispatchers.IO) {
-            val result = AsteroidApi.retrofitService.getProperties(Constants.API_KEY)
+            val result = AsteroidApi.retrofitService.getProperties(
+                Constants.API_KEY,
+                currentDate,
+                endDate
+            )
             val asteroids = parseAsteroidsJsonResult(JSONObject(result))
             database.asteroidDao.insertAll(*asteroids.asDatabaseModel())
         }

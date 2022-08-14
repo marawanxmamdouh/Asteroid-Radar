@@ -13,7 +13,11 @@ private val retrofit = Retrofit.Builder()
 
 interface AsteroidApiService {
     @GET("neo/rest/v1/feed")
-    suspend fun getProperties(@Query("api_key") type: String): String
+    suspend fun getProperties(
+        @Query("api_key") keyType: String,
+        @Query("start_date") startDateType: String,
+        @Query("end_date") endDateType: String
+    ): String
 }
 
 object AsteroidApi {
