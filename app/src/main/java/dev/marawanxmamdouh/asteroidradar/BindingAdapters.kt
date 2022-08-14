@@ -3,6 +3,15 @@ package dev.marawanxmamdouh.asteroidradar
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
+import dev.marawanxmamdouh.asteroidradar.main.RecyclerViewAdapter
+import dev.marawanxmamdouh.asteroidradar.model.Asteroid
+
+@BindingAdapter("asteroidsList")
+fun RecyclerView.setAsteroids(data: List<Asteroid>?) {
+    val adapter = adapter as RecyclerViewAdapter
+    adapter.submitList(data)
+}
 
 @BindingAdapter("statusIcon")
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
