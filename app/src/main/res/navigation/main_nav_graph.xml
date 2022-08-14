@@ -22,6 +22,6 @@
 
         <argument
             android:name="selectedAsteroid"
-            app:argType="dev.marawanxmamdouh.asteroidradar.Asteroid" />
+            app:argType="dev.marawanxmamdouh.asteroidradar.model.Asteroid" />
     </fragment>
 </navigation>

@@ -1,4 +1,4 @@
-package dev.marawanxmamdouh.asteroidradar
+package dev.marawanxmamdouh.asteroidradar.model
 
 import com.squareup.moshi.Json
 

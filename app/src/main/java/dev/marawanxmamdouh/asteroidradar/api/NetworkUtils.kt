@@ -1,6 +1,6 @@
 package dev.marawanxmamdouh.asteroidradar.api
 
-import dev.marawanxmamdouh.asteroidradar.Asteroid
+import dev.marawanxmamdouh.asteroidradar.model.Asteroid
 import dev.marawanxmamdouh.asteroidradar.Constants
 import org.json.JSONObject
 import java.text.SimpleDateFormat
