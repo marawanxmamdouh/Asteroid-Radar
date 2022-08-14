@@ -1,43 +1,26 @@
 package dev.marawanxmamdouh.asteroidradar.main
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import dev.marawanxmamdouh.asteroidradar.Constants.API_KEY
-import dev.marawanxmamdouh.asteroidradar.api.AsteroidApi
-import dev.marawanxmamdouh.asteroidradar.api.parseAsteroidsJsonResult
+import android.app.Application
+import androidx.lifecycle.*
+import dev.marawanxmamdouh.asteroidradar.database.getDatabase
 import dev.marawanxmamdouh.asteroidradar.model.Asteroid
+import dev.marawanxmamdouh.asteroidradar.repository.AsteroidRepository
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 private const val TAG = "MainViewModel"
 
-class MainViewModel : ViewModel() {
+class MainViewModel(application: Application) : ViewModel() {
 
-    private val _asteroids = MutableLiveData<List<Asteroid>>()
-    val asteroids: LiveData<List<Asteroid>>
-        get() = _asteroids
+    private val database = getDatabase(application)
+    private val asteroidRepository = AsteroidRepository(database)
 
     init {
-        fetchData()
-    }
-
-    private fun fetchData() {
         viewModelScope.launch {
-            try {
-                val result = AsteroidApi.retrofitService.getProperties(API_KEY)
-                _asteroids.value = parseAsteroidsJsonResult(JSONObject(result))
-                Log.i(
-                    TAG,
-                    "fetchData (line 34):  ${_asteroids.value?.size} *** ${_asteroids.value?.get(0)}"
-                )
-            } catch (e: Exception) {
-                Log.i(TAG, "getAsteroids (line 37): ${e.message}")
-            }
+            asteroidRepository.refreshAsteroids()
         }
     }
+
+    val asteroids = asteroidRepository.asteroids
 
     /**
      * This part is to handle navigation from main fragment to detail fragment and back
@@ -52,5 +35,15 @@ class MainViewModel : ViewModel() {
 
     fun onNavigateToDetailFragmentComplete() {
         _navigateToDetailFragment.value = null
+    }
+
+    class Factory(val app: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return MainViewModel(app) as T
+            }
+            throw IllegalArgumentException("Unable to construct view model")
+        }
     }
 }
