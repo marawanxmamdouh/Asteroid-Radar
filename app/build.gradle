@@ -81,9 +81,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutines"
 
-    // Glide
-    implementation "com.github.bumptech.glide:glide:$version_glide"
-    kapt "com.github.bumptech.glide:compiler:$version_glide"
+    // picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
