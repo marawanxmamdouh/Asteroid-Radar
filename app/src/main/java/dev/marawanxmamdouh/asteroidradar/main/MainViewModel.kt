@@ -9,6 +9,9 @@ import dev.marawanxmamdouh.asteroidradar.api.imageoftheday.ImageOfTheDay
 import dev.marawanxmamdouh.asteroidradar.database.getDatabase
 import dev.marawanxmamdouh.asteroidradar.model.Asteroid
 import dev.marawanxmamdouh.asteroidradar.repository.AsteroidRepository
+import dev.marawanxmamdouh.asteroidradar.repository.Filter
+import dev.marawanxmamdouh.asteroidradar.repository.currentDate
+import dev.marawanxmamdouh.asteroidradar.repository.endDate
 import kotlinx.coroutines.launch
 
 private const val TAG = "MainViewModel"
@@ -20,7 +23,7 @@ class MainViewModel(application: Application) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            asteroidRepository.refreshAsteroids()
+            asteroidRepository.refreshAsteroids(currentDate, endDate)
         }
         getImageOfTheDay()
     }
@@ -56,6 +59,16 @@ class MainViewModel(application: Application) : ViewModel() {
                 _imageOfTheDay.value = result
             } catch (e: Exception) {
                 Log.i(TAG, "getIOTD (line 51): ${e.message}")
+            }
+        }
+    }
+
+    fun refreshAsteroids(filter: Filter) {
+        viewModelScope.launch {
+            if (filter == Filter.TODAY) {
+                asteroidRepository.refreshAsteroids(currentDate, currentDate)
+            } else {
+                asteroidRepository.refreshAsteroids(currentDate, endDate)
             }
         }
     }

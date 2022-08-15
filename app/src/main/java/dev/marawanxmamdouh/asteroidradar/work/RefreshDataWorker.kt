@@ -6,6 +6,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dev.marawanxmamdouh.asteroidradar.database.getDatabase
 import dev.marawanxmamdouh.asteroidradar.repository.AsteroidRepository
+import dev.marawanxmamdouh.asteroidradar.repository.currentDate
+import dev.marawanxmamdouh.asteroidradar.repository.endDate
 import retrofit2.HttpException
 
 class RefreshDataWorker(appContext: Context, params: WorkerParameters) :
@@ -20,7 +22,7 @@ class RefreshDataWorker(appContext: Context, params: WorkerParameters) :
         val repository = AsteroidRepository(database)
 
         return try {
-            repository.refreshAsteroids()
+            repository.refreshAsteroids(currentDate, endDate)
             Result.success()
         } catch (e: HttpException) {
             Result.retry()

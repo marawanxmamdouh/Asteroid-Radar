@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import dev.marawanxmamdouh.asteroidradar.R
 import dev.marawanxmamdouh.asteroidradar.databinding.FragmentMainBinding
+import dev.marawanxmamdouh.asteroidradar.repository.Filter
 
 class MainFragment : Fragment() {
 
@@ -54,8 +55,21 @@ class MainFragment : Fragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // Handle the menu selection
-                return true
+                return when (menuItem.itemId) {
+                    R.id.nextWeekAsteroids -> {
+                        viewModel.refreshAsteroids(Filter.WEEK)
+                        true
+                    }
+                    R.id.todayAsteroids -> {
+                        viewModel.refreshAsteroids(Filter.TODAY)
+                        true
+                    }
+                    R.id.savedAsteroids -> {
+                        viewModel.refreshAsteroids(Filter.SAVED)
+                        true
+                    }
+                    else -> false
+                }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }

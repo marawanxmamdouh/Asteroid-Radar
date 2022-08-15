@@ -15,6 +15,8 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.SocketTimeoutException
 
+enum class Filter { TODAY, WEEK, SAVED }
+
 class AsteroidRepository(private val database: AsteroidDatabase) {
 
     val asteroids: LiveData<List<Asteroid>> =
@@ -22,7 +24,7 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
             it.asDomainModel()
         }
 
-    suspend fun refreshAsteroids() {
+    suspend fun refreshAsteroids(currentDate: String, endDate: String) {
         withContext(Dispatchers.IO) {
             try {
                 val result = AsteroidApi.retrofitService.getProperties(
@@ -31,6 +33,7 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
                     endDate
                 )
                 val asteroids = parseAsteroidsJsonResult(JSONObject(result))
+                database.asteroidDao.deleteAsteroids()
                 database.asteroidDao.insertAll(*asteroids.asDatabaseModel())
                 Log.i("AsteroidRepository", "refreshAsteroids (line 34): $currentDate --- $endDate")
             } catch (e: SocketTimeoutException) {
