@@ -1,7 +1,11 @@
 package dev.marawanxmamdouh.asteroidradar.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
+import dev.marawanxmamdouh.asteroidradar.Constants
+import dev.marawanxmamdouh.asteroidradar.api.imageoftheday.IOTDApi
+import dev.marawanxmamdouh.asteroidradar.api.imageoftheday.ImageOfTheDay
 import dev.marawanxmamdouh.asteroidradar.database.getDatabase
 import dev.marawanxmamdouh.asteroidradar.model.Asteroid
 import dev.marawanxmamdouh.asteroidradar.repository.AsteroidRepository
@@ -18,6 +22,7 @@ class MainViewModel(application: Application) : ViewModel() {
         viewModelScope.launch {
             asteroidRepository.refreshAsteroids()
         }
+        getImageOfTheDay()
     }
 
     val asteroids = asteroidRepository.asteroids
@@ -35,6 +40,24 @@ class MainViewModel(application: Application) : ViewModel() {
 
     fun onNavigateToDetailFragmentComplete() {
         _navigateToDetailFragment.value = null
+    }
+
+    /**
+     * This part is to get image of the day from api
+     */
+    private val _imageOfTheDay = MutableLiveData<ImageOfTheDay?>()
+    val imageOfTheDay: LiveData<ImageOfTheDay?>
+        get() = _imageOfTheDay
+
+    private fun getImageOfTheDay() {
+        viewModelScope.launch {
+            try {
+                val result = IOTDApi.retrofitService.getProperties(Constants.API_KEY)
+                _imageOfTheDay.value = result
+            } catch (e: Exception) {
+                Log.i(TAG, "getIOTD (line 51): ${e.message}")
+            }
+        }
     }
 
     class Factory(val app: Application) : ViewModelProvider.Factory {
