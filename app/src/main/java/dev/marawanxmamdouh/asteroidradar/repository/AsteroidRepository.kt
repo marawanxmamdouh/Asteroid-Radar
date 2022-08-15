@@ -13,6 +13,7 @@ import dev.marawanxmamdouh.asteroidradar.model.Asteroid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import java.net.SocketTimeoutException
 
 class AsteroidRepository(private val database: AsteroidDatabase) {
 
@@ -22,15 +23,21 @@ class AsteroidRepository(private val database: AsteroidDatabase) {
         }
 
     suspend fun refreshAsteroids() {
-        Log.i("AsteroidRepository", "refreshAsteroids (line 29): $currentDate --- $endDate")
         withContext(Dispatchers.IO) {
-            val result = AsteroidApi.retrofitService.getProperties(
-                Constants.API_KEY,
-                currentDate,
-                endDate
-            )
-            val asteroids = parseAsteroidsJsonResult(JSONObject(result))
-            database.asteroidDao.insertAll(*asteroids.asDatabaseModel())
+            try {
+                val result = AsteroidApi.retrofitService.getProperties(
+                    Constants.API_KEY,
+                    currentDate,
+                    endDate
+                )
+                val asteroids = parseAsteroidsJsonResult(JSONObject(result))
+                database.asteroidDao.insertAll(*asteroids.asDatabaseModel())
+                Log.i("AsteroidRepository", "refreshAsteroids (line 34): $currentDate --- $endDate")
+            } catch (e: SocketTimeoutException) {
+                Log.i("AsteroidRepository", "refreshAsteroids (line 37): $e")
+            } catch (e: Exception) {
+                Log.i("AsteroidRepository", "refreshAsteroids (line 39): $e")
+            }
         }
     }
 }
