@@ -51,6 +51,13 @@ fun bindTextViewToDisplayVelocity(textView: TextView, number: Double) {
     textView.text = String.format(context.getString(R.string.km_s_unit_format), number)
 }
 
+@BindingAdapter("asteroidImageDescription")
+fun ImageView.bindAsteroidImageDescription(name: String?) {
+    name?.let {
+        contentDescription = "Asteroid code name $name Image"
+    }
+}
+
 /**
  * Binding adapter for image of the day
  */
