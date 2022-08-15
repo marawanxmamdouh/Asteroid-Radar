@@ -4,6 +4,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
+import dev.marawanxmamdouh.asteroidradar.api.imageoftheday.ImageOfTheDay
 import dev.marawanxmamdouh.asteroidradar.main.RecyclerViewAdapter
 import dev.marawanxmamdouh.asteroidradar.model.Asteroid
 
@@ -47,4 +49,27 @@ fun bindTextViewToKmUnit(textView: TextView, number: Double) {
 fun bindTextViewToDisplayVelocity(textView: TextView, number: Double) {
     val context = textView.context
     textView.text = String.format(context.getString(R.string.km_s_unit_format), number)
+}
+
+/**
+ * Binding adapter for image of the day
+ */
+@BindingAdapter("imageUrl")
+fun ImageView.bindImageView(imageOfTheDay: ImageOfTheDay?) {
+    imageOfTheDay?.url?.let {
+        if (imageOfTheDay.media_type == "image") {
+            Picasso.get()
+                .load(imageOfTheDay.url)
+                .into(this)
+        }
+    }
+}
+
+@BindingAdapter("imageDescription")
+fun ImageView.bindImageDescription(imageOfTheDay: ImageOfTheDay?) {
+    imageOfTheDay?.title?.let {
+        if (imageOfTheDay.media_type == "image") {
+            contentDescription = imageOfTheDay.title
+        }
+    }
 }

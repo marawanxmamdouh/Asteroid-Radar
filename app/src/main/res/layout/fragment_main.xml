@@ -31,7 +31,9 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/image_of_the_day"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/placeholder_picture_of_day" />
+                app:imageDescription="@{viewModel.imageOfTheDay}"
+                app:imageUrl="@{viewModel.imageOfTheDay}"
+                app:srcCompat="@drawable/image_of_day" />
 
             <TextView
                 android:id="@+id/textView"
